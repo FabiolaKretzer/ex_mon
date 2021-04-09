@@ -5,30 +5,30 @@ defmodule ExMonTest do
 
   alias ExMon.{Game, Player}
 
+  @player ExMon.create_pĺayer("Jogador1", :chute, :soco, :cura)
+  @struct_player %Player{
+      life: 100,
+      moves: %{
+        move_avg: :chute,
+        move_heal: :cura,
+        move_rnd: :soco
+      },
+      name: "Jogador1"
+    }
+
   describe "create_player/4" do
     test "returns a player" do
-      expected_response =
-        %Player{
-          life: 100,
-          moves: %{
-            move_avg: :chute,
-            move_heal: :cura,
-            move_rnd: :soco
-          },
-          name: "Jogador1"
-        }
+      expected_response = @struct_player
 
-      assert expected_response == ExMon.create_pĺayer("Jogador1", :chute, :soco, :cura)
+      assert expected_response == @player
     end
   end
 
   describe "start_game/4" do
     test "when the game is started, returns a message" do
-      player = ExMon.create_pĺayer("Jogador1", :chute, :soco, :cura)
-
       messages =
         capture_io(fn ->
-          assert ExMon.start_game(player) == :ok
+          assert ExMon.start_game(@player) == :ok
         end)
 
       assert messages =~ "The game is started!"
@@ -38,10 +38,8 @@ defmodule ExMonTest do
 
   describe "make_move/1" do
     setup do
-      player = ExMon.create_pĺayer("Jogador1", :chute, :soco, :cura)
-
       capture_io(fn ->
-        ExMon.start_game(player)
+        ExMon.start_game(@player)
       end)
 
       :ok
