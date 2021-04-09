@@ -4,7 +4,7 @@ defmodule ExMon do
 
   @computer_name "Robotinik"
   @computer_moves [:move_avg, :move_rnd, :move_heal]
-  @players [:computer, :player]
+  @players [:player, :player]
 
   def create_pĺayer(name, move_avg, move_rnd, move_heal) do
     Player.build(name, move_avg, move_rnd, move_heal)
