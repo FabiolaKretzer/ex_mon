@@ -35,7 +35,7 @@ defmodule ExMon do
     |> computer_move()
   end
 
-  defp is_computer(%{turn: :player} = player), do: Status.print_round_message(player)
+  defp is_computer(%{turn: :player}), do: :ok
 
   defp handle_status(:game_over, _move), do: Status.print_round_message(Game.info())
 
@@ -58,12 +58,22 @@ defmodule ExMon do
     Status.print_round_message(Game.info())
   end
 
-  defp computer_move(%{turn: :computer} = computer)
-    when computer.status == :started or computer.status == :continue do
+  defp computer_move(%{computer: computer, turn: :computer} = info)
+    when info.status == :started or info.status == :continue do
 
-    {:ok, Enum.random(@computer_moves)}
-    |> do_move()
+    computer.life
+    |> random_computer_move()
   end
 
   defp computer_move(_), do: :ok
+
+  defp random_computer_move(life) when life < 40 do
+    {:ok, Enum.random(@computer_moves ++ [:move_heal])}
+    |> do_move()
+  end
+
+  defp random_computer_move(_) do
+    {:ok, Enum.random(@computer_moves)}
+    |> do_move()
+  end
 end
