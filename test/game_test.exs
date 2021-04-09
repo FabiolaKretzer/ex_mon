@@ -8,7 +8,7 @@ defmodule ExMon.GameTest do
       player = ExMon.create_pĺayer("Jogador1", :chute, :soco, :cura)
       computer = ExMon.create_pĺayer("Robotinik", :chute, :soco, :cura)
 
-      assert {:ok, _pid} = Game.start(computer, player)
+      assert {:ok, _pid} = Game.start(computer, player, :computer)
     end
   end
 
@@ -17,7 +17,7 @@ defmodule ExMon.GameTest do
       player = ExMon.create_pĺayer("Jogador1", :chute, :soco, :cura)
       computer = ExMon.create_pĺayer("Robotinik", :chute, :soco, :cura)
 
-      Game.start(computer, player)
+      Game.start(computer, player, :computer)
 
       expected_response = %{
         computer: %Player{
@@ -39,7 +39,7 @@ defmodule ExMon.GameTest do
           name: "Jogador1"
         },
         status: :started,
-        turn: :player
+        turn: :computer
       }
 
       assert expected_response == Game.info()
@@ -51,7 +51,7 @@ defmodule ExMon.GameTest do
       player = ExMon.create_pĺayer("Jogador1", :chute, :soco, :cura)
       computer = ExMon.create_pĺayer("Robotinik", :chute, :soco, :cura)
 
-      Game.start(computer, player)
+      Game.start(computer, player, :player)
 
       expected_response = %{
         computer: %Player{

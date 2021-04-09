@@ -4,17 +4,24 @@ defmodule ExMon do
 
   @computer_name "Robotinik"
   @computer_moves [:move_avg, :move_rnd, :move_heal]
+  @players [:computer, :player]
 
   def create_pĺayer(name, move_avg, move_rnd, move_heal) do
     Player.build(name, move_avg, move_rnd, move_heal)
   end
 
   def start_game(player) do
+    first_player = Enum.random(@players)
+
     @computer_name
     |> create_pĺayer(:punch, :kick, :heal)
-    |> Game.start(player)
+    |> Game.start(player, first_player)
 
-    Status.print_round_message(Game.info())
+    current = Game.info()
+
+    Status.print_round_message(current)
+
+    is_computer(current)
   end
 
   def make_move(move) do
@@ -22,6 +29,13 @@ defmodule ExMon do
     |> Map.get(:status)
     |> handle_status(move)
   end
+
+  defp is_computer(%{turn: :computer} = computer) do
+    computer
+    |> computer_move()
+  end
+
+  defp is_computer(%{turn: :player} = player), do: Status.print_round_message(player)
 
   defp handle_status(:game_over, _move), do: Status.print_round_message(Game.info())
 
@@ -44,7 +58,9 @@ defmodule ExMon do
     Status.print_round_message(Game.info())
   end
 
-  defp computer_move(%{turn: :computer, status: :continue}) do
+  defp computer_move(%{turn: :computer} = computer)
+    when computer.status == :started or computer.status == :continue do
+
     {:ok, Enum.random(@computer_moves)}
     |> do_move()
   end
